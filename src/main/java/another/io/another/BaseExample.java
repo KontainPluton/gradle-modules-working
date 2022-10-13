@@ -1,3 +1,7 @@
-package io.another;
+package another.io.another;
 
-public class BaseExample {}
+public class BaseExample {
+    public static String hello(){
+        return "Hello";
+    }
+}

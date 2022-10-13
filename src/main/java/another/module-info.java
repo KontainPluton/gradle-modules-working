@@ -1,1 +1,1 @@
-module another { exports io.another; }
+module another { exports another.io.another; }

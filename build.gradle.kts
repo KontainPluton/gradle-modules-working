@@ -1,10 +1,50 @@
 plugins {
     java
+    `maven-publish`
+}
+
+repositories { mavenCentral() }
+
+dependencies {
+    testImplementation("junit:junit:4.13.2")
+    compileOnly("junit:junit:4.13.2")
+    testCompileOnly("junit:junit:4.13.2")
+    testFixtures("junit:junit:4.13.2")
 }
 
 tasks.compileJava {
     options.compilerArgs.add("--module-source-path")
     options.compilerArgs.add(files("src/main/java").asPath)
+}
+
+tasks.compileTestJava {
+    options.compilerArgs.add("--module-source-path")
+    options.compilerArgs.add(files("src/test/java").asPath)
+    options.compilerArgs.add("--patch-module")
+    options.compilerArgs.add("another=${tasks.compileJava.get().destinationDirectory.asFile.get().path}/another")
+    options.compilerArgs.add("--patch-module")
+    options.compilerArgs.add("example=${tasks.compileJava.get().destinationDirectory.asFile.get().path}/example")
+    options.compilerArgs.add("--module-path=${classpath.asPath}")
+}
+
+tasks.test {
+    useJUnit()
+    testLogging {
+        events("PASSED", "FAILED", "SKIPPED", "STANDARD_OUT")
+    }
+    maxHeapSize = "1G"
+
+    val args = listOf(
+        "--patch-module","another=${tasks.compileJava.get().destinationDirectory.asFile.get().path}/another",
+        "--patch-module","example=${tasks.compileJava.get().destinationDirectory.asFile.get().path}/example",
+        "--add-modules","another",
+        "--add-modules","example",
+        "--module-path=${classpath.asPath}"
+    )
+
+    println(classpath.asPath)
+
+    jvmArgs(args)
 }
 
 file("src/main/java").listFiles() { pathname -> pathname.isDirectory }.forEach {
@@ -55,6 +95,9 @@ tasks.jar.configure() {
     doFirst {
         println("Creation of a jar per module...")
     }
+}
+repositories {
+    mavenCentral()
 }
 
 /*tasks.withType<Jar> {

@@ -1,5 +1,5 @@
-package io.example;
+package example.io.example;
 
-import io.another.BaseExample;
+import another.io.another.BaseExample;
 
 public class Example extends BaseExample {}

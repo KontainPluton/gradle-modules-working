@@ -1,4 +1,4 @@
 module example {
-    exports io.example;
+    exports example.io.example;
     requires another;
 }
