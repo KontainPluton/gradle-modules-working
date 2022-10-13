@@ -7,14 +7,13 @@ repositories { mavenCentral() }
 
 dependencies {
     testImplementation("junit:junit:4.13.2")
-    compileOnly("junit:junit:4.13.2")
-    testCompileOnly("junit:junit:4.13.2")
-    testFixtures("junit:junit:4.13.2")
+    implementation("org.junit.jupiter:junit-jupiter:5.9.0")
 }
 
 tasks.compileJava {
     options.compilerArgs.add("--module-source-path")
     options.compilerArgs.add(files("src/main/java").asPath)
+    options.compilerArgs.add("--module-path=${classpath.asPath}")
 }
 
 tasks.compileTestJava {
@@ -41,9 +40,6 @@ tasks.test {
         "--add-modules","example",
         "--module-path=${classpath.asPath}"
     )
-
-    println(classpath.asPath)
-
     jvmArgs(args)
 }
 
